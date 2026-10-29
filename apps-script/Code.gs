@@ -35,7 +35,12 @@ function doPost(e) {
     if (data.website) return json({ ok: false, error: "invalido" });
 
     var checked = validatePayload(data);
-    if (!checked.ok) return json({ ok: false, error: checked.error });
+    if (!checked.ok) {
+      var failure = { ok: false, error: checked.error };
+      if (checked.rut) failure.rut = checked.rut;
+      if (checked.team) failure.team = checked.team;
+      return json(failure);
+    }
 
     var lock = LockService.getScriptLock();
     if (!lock.tryLock(10000)) return json({ ok: false, error: "ocupado" });
