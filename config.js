@@ -1,5 +1,5 @@
 window.TORNEO = {
-  scriptUrl: "",
+  scriptUrl: "https://script.google.com/macros/s/AKfycbwSAYliVCsHOdgwAkClOsB6jBkZAxLeE0CZ31XFuXXWsF0YcQTNV0sebLJQSG9O2G94/exec",
   maxTeams: 16,
   amountLabel: "$5.000",
   instagram: "red_knights_basketball",
