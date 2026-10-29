@@ -1,0 +1,237 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Torneo 3x3 benéfico por la Teletón</title>
+  <meta name="description" content="Inscribe a tu equipo en el torneo 3x3 del 6 de noviembre de 2026. 16 cupos, $13.000 por equipo, todo lo recaudado se dona a la Teletón.">
+  <meta name="theme-color" content="#070708">
+  <meta property="og:title" content="Torneo 3x3 benéfico por la Teletón">
+  <meta property="og:description" content="Reserva el cupo de tu equipo. 6 de noviembre de 2026, 13:00, Complejo Educacional Manuel Plaza Reyes.">
+  <meta property="og:type" content="website">
+  <meta property="og:locale" content="es_CL">
+  <link rel="icon" href="favicon.svg" type="image/svg+xml">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Anton&family=Barlow:ital,wght@0,400;0,500;0,600;0,700;1,400&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <div class="court" aria-hidden="true"></div>
+
+  <header class="top">
+    <p class="brand">CD Red Knights + Fanatic Voley</p>
+    <a class="ig-link" href="https://www.instagram.com/red_knights_basketball/" target="_blank" rel="noopener">@red_knights_basketball</a>
+  </header>
+
+  <main>
+    <section class="hero">
+      <p class="eyebrow">Segunda edición</p>
+      <h1>
+        <span class="hero-kicker">Torneo</span>
+        <span class="hero-mark">3x3</span>
+      </h1>
+      <p class="lede">A beneficio de la <strong>Teletón</strong>. Arma tu equipo, reserva el cupo y juega básquet por la causa.</p>
+      <p class="donation">Todo lo recaudado será donado a la Teletón.</p>
+    </section>
+
+    <section class="facts" aria-label="Datos del torneo">
+      <article>
+        <p class="fact-label">Fecha</p>
+        <p class="fact-value">6 de noviembre de 2026</p>
+        <p class="fact-note">Desde las 13:00 horas</p>
+      </article>
+      <article>
+        <p class="fact-label">Lugar</p>
+        <p class="fact-value">Complejo Educacional Manuel Plaza Reyes</p>
+        <p class="fact-note"><a href="https://www.google.com/maps/search/?api=1&query=Complejo+Educacional+Manuel+Plaza+Reyes" target="_blank" rel="noopener">Ver en el mapa</a></p>
+      </article>
+      <article>
+        <p class="fact-label">Inscripción</p>
+        <p class="fact-value">$13.000</p>
+        <p class="fact-note">Por equipo, con transferencia</p>
+      </article>
+      <article>
+        <p class="fact-label">Formato</p>
+        <p class="fact-value">4 personas</p>
+        <p class="fact-note">Pueden reservar con 3 y sumar al cuarto después</p>
+      </article>
+    </section>
+
+    <section class="steps" aria-label="Cómo reservar">
+      <h2>Cómo se guarda el cupo</h2>
+      <ol>
+        <li>
+          <span>1</span>
+          <p><strong>Inscribe al equipo.</strong> Con eso el cupo queda reservado y nadie más puede tomarlo.</p>
+        </li>
+        <li>
+          <span>2</span>
+          <p><strong>Transfiere $13.000</strong> a la cuenta Mercado Pago con el código RK-2026-000007.</p>
+        </li>
+        <li>
+          <span>3</span>
+          <p><strong>Manda el comprobante</strong> por Instagram a @red_knights_basketball. Ahí se confirma el cupo.</p>
+        </li>
+      </ol>
+    </section>
+
+    <section class="cupos" id="cupos" aria-live="polite">
+      <p class="cupos-kicker">Solo 16 equipos</p>
+      <p class="cupos-count" id="cupos-count">16 cupos</p>
+      <p class="cupos-note" id="cupos-note">Cada inscripción reserva un cupo hasta que se confirma la transferencia.</p>
+    </section>
+
+    <section class="panel" id="inscripcion">
+      <div class="closed" id="closed" hidden>
+        <h2>Los 16 cupos ya están reservados</h2>
+        <p>Si se libera uno, vuelve a aparecer aquí. También puedes escribir por Instagram a @red_knights_basketball.</p>
+      </div>
+
+      <div class="inactive" id="inactive" hidden>
+        <h2>Las inscripciones en línea aún no están activas</h2>
+        <p>El torneo ya está publicado. Falta conectar la planilla de los organizadores para guardar los cupos desde esta página.</p>
+      </div>
+
+      <form id="form" novalidate>
+        <div class="form-head">
+          <h2>Arma tu equipo</h2>
+          <p>El nombre tiene que ser respetuoso. Los RUT solo los ven los organizadores: no se publican en esta página.</p>
+        </div>
+
+        <div class="hp" aria-hidden="true">
+          <label>Sitio web <input name="website" tabindex="-1" autocomplete="off"></label>
+        </div>
+
+        <div class="field">
+          <label for="team-name">Nombre del equipo</label>
+          <input id="team-name" name="teamName" type="text" maxlength="30" required autocomplete="organization" placeholder="Ejemplo: Red Knights">
+          <p class="error" id="error-team" role="alert"></p>
+        </div>
+
+        <fieldset>
+          <legend>Jugadores</legend>
+          <p class="hint">Los tres primeros son obligatorios. El cuarto puede quedar pendiente y enviarse después por Instagram.</p>
+
+          <div class="player" data-player="1">
+            <h3>Jugador 1 <em>Capitán</em></h3>
+            <div class="pair">
+              <div class="field">
+                <label for="p1-name">Nombre completo</label>
+                <input id="p1-name" name="p1name" type="text" maxlength="80" autocomplete="name" required>
+                <p class="error" id="error-p1name" role="alert"></p>
+              </div>
+              <div class="field">
+                <label for="p1-rut">RUT</label>
+                <input id="p1-rut" name="p1rut" type="text" inputmode="text" maxlength="12" autocomplete="off" placeholder="12.345.678-9" required>
+                <p class="error" id="error-p1rut" role="alert"></p>
+              </div>
+            </div>
+          </div>
+
+          <div class="player" data-player="2">
+            <h3>Jugador 2</h3>
+            <div class="pair">
+              <div class="field">
+                <label for="p2-name">Nombre completo</label>
+                <input id="p2-name" name="p2name" type="text" maxlength="80" autocomplete="name" required>
+                <p class="error" id="error-p2name" role="alert"></p>
+              </div>
+              <div class="field">
+                <label for="p2-rut">RUT</label>
+                <input id="p2-rut" name="p2rut" type="text" inputmode="text" maxlength="12" autocomplete="off" placeholder="12.345.678-9" required>
+                <p class="error" id="error-p2rut" role="alert"></p>
+              </div>
+            </div>
+          </div>
+
+          <div class="player" data-player="3">
+            <h3>Jugador 3</h3>
+            <div class="pair">
+              <div class="field">
+                <label for="p3-name">Nombre completo</label>
+                <input id="p3-name" name="p3name" type="text" maxlength="80" autocomplete="name" required>
+                <p class="error" id="error-p3name" role="alert"></p>
+              </div>
+              <div class="field">
+                <label for="p3-rut">RUT</label>
+                <input id="p3-rut" name="p3rut" type="text" inputmode="text" maxlength="12" autocomplete="off" placeholder="12.345.678-9" required>
+                <p class="error" id="error-p3rut" role="alert"></p>
+              </div>
+            </div>
+          </div>
+
+          <div class="player player-optional" data-player="4">
+            <h3>Jugador 4 <em>Opcional</em></h3>
+            <div class="pair">
+              <div class="field">
+                <label for="p4-name">Nombre completo</label>
+                <input id="p4-name" name="p4name" type="text" maxlength="80" autocomplete="name">
+                <p class="error" id="error-p4name" role="alert"></p>
+              </div>
+              <div class="field">
+                <label for="p4-rut">RUT</label>
+                <input id="p4-rut" name="p4rut" type="text" inputmode="text" maxlength="12" autocomplete="off" placeholder="12.345.678-9">
+                <p class="error" id="error-p4rut" role="alert"></p>
+              </div>
+            </div>
+          </div>
+        </fieldset>
+
+        <div class="field">
+          <label for="whatsapp">WhatsApp del capitán</label>
+          <input id="whatsapp" name="whatsapp" type="tel" inputmode="tel" maxlength="20" autocomplete="tel" placeholder="+56 9 1234 5678" required>
+          <p class="error" id="error-whatsapp" role="alert"></p>
+        </div>
+
+        <p class="form-error" id="form-error" role="alert" hidden></p>
+
+        <button class="submit" id="submit" type="submit">Reservar cupo</button>
+        <p class="fine">Al reservar, el cupo queda tomado. Se confirma cuando los organizadores ven el comprobante de la transferencia.</p>
+      </form>
+
+      <div class="success" id="success" hidden>
+        <p class="success-kicker">Cupo reservado</p>
+        <h2 id="success-title">Tu cupo quedó reservado</h2>
+        <p class="success-lead" id="success-lead"></p>
+
+        <dl class="code-card">
+          <div>
+            <dt>Código de tu equipo</dt>
+            <dd id="team-code"></dd>
+          </div>
+          <div>
+            <dt>Equipo</dt>
+            <dd id="success-team"></dd>
+          </div>
+        </dl>
+
+        <h3>Transfiere $13.000 para confirmarlo</h3>
+        <p class="pay-note">Usa estos datos en la transferencia. En el comentario o referencia escribe <strong>RK-2026-000007</strong>.</p>
+
+        <dl class="pay-grid" id="pay-grid"></dl>
+
+        <div class="success-actions">
+          <button class="ghost" id="copy-message" type="button">Copiar mensaje para Instagram</button>
+          <a class="submit ig-button" id="ig-button" href="https://ig.me/m/red_knights_basketball" target="_blank" rel="noopener">Enviar comprobante por Instagram</a>
+        </div>
+        <p class="fine" id="fourth-note"></p>
+        <button class="text-button" id="another" type="button">Inscribir otro equipo</button>
+      </div>
+    </section>
+
+    <section class="teams" id="teams-section" hidden>
+      <h2>Equipos con cupo reservado</h2>
+      <ul id="teams"></ul>
+    </section>
+  </main>
+
+  <footer>
+    <p>Organizan CD Red Knights y Fanatic Voley.</p>
+    <p>Todo lo recaudado será donado a la Teletón.</p>
+  </footer>
+
+  <script src="config.js"></script>
+  <script src="app.js"></script>
+</body>
+</html>
