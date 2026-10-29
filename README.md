@@ -8,7 +8,7 @@ Los RUT no se publican en la página. Solo quedan en la Google Sheet de los orga
 
 ## Lo que hace un equipo
 
-1. Completa el formulario con un nombre respetuoso, 3 jugadores (el cuarto puede quedar pendiente) y el WhatsApp del capitán.
+1. Completa el formulario con un nombre respetuoso, 3 jugadores (el cuarto puede quedar pendiente) y el WhatsApp del capitán. Puede jugar cualquier persona, de cualquier edad y sexo. Si un RUT ya está en otro equipo, la página lo indica y no deja reservar.
 2. Transfiere **$5.000** a esta cuenta:
    - Banco: Mercado Pago
    - Tipo: Cuenta vista

@@ -110,7 +110,7 @@
       });
       const data = await response.json();
       if (!data.ok) {
-        showServerError(data.error);
+        showServerError(data);
         return;
       }
       showSuccess(data, result.payload);
@@ -142,9 +142,19 @@
     const fourth = readPlayer(data, 4, false, errors);
     if (fourth) players.push(fourth);
 
-    const ruts = players.map((player) => player && normalizeRut(player.rut)).filter(Boolean);
-    if (new Set(ruts).size !== ruts.length) {
-      errors.push({ id: "form", message: "Cada jugador tiene que tener un RUT distinto." });
+    const seenRut = {};
+    for (let index = 1; index <= 4; index += 1) {
+      const raw = String(data.get("p" + index + "rut") || "");
+      const key = normalizeRut(raw);
+      if (!key || !isValidRut(raw)) continue;
+      if (seenRut[key]) {
+        errors.push({
+          id: "p" + index + "rut",
+          message: "El RUT " + formatRut(raw) + " ya está escrito en este equipo. Un jugador no puede inscribirse dos veces."
+        });
+      } else {
+        seenRut[key] = index;
+      }
     }
 
     const whatsapp = normalizePhone(data.get("whatsapp"));
@@ -211,13 +221,19 @@
     return match ? document.getElementById("p" + match[1] + "-" + match[2]) : null;
   }
 
-  function showServerError(code) {
+  function showServerError(data) {
+    const code = typeof data === "string" ? data : data.error;
+    if (code === "duplicado" || code === "repetido") {
+      const message = playerTakenMessage(data, code);
+      const fieldId = rutFieldId(data.rut);
+      if (fieldId) showErrors([{ id: fieldId, message: message }]);
+      showFormError(message);
+      return;
+    }
     const messages = {
       ofensivo: ["team", "Elige un nombre de equipo respetuoso."],
       equipo: ["team", "Ese nombre de equipo ya está reservado."],
       cupos: ["form", "Los 16 cupos ya están reservados."],
-      duplicado: ["form", "Ese RUT ya está inscrito en otro equipo."],
-      repetido: ["form", "Cada jugador tiene que tener un RUT distinto."],
       rut: ["form", "Hay un RUT que no coincide con el dígito verificador."],
       whatsapp: ["whatsapp", "Escribe un WhatsApp chileno, por ejemplo +56 9 1234 5678."],
       ocupado: ["form", "Otro equipo se está inscribiendo. Intenta otra vez en unos segundos."]
@@ -230,6 +246,40 @@
       document.getElementById("closed").hidden = false;
       document.getElementById("cupos-count").textContent = "No quedan cupos";
     }
+  }
+
+  function playerTakenMessage(data, code) {
+    const rut = data && data.rut ? data.rut : "";
+    const name = rut ? playerNameForRut(rut) : "";
+    const who = name && rut ? name + " (RUT " + rut + ")" : rut ? "El jugador con RUT " + rut : "Ese jugador";
+    if (code === "repetido") {
+      return who + " ya está escrito en este equipo. Un jugador no puede inscribirse dos veces.";
+    }
+    if (data && data.team) {
+      return who + " ya está inscrito en el equipo " + data.team + ". Un jugador no puede estar en dos equipos.";
+    }
+    return who + " ya está inscrito en otro equipo. Un jugador no puede estar en dos equipos.";
+  }
+
+  function playerNameForRut(rut) {
+    const key = normalizeRut(rut);
+    for (let index = 1; index <= 4; index += 1) {
+      const field = document.getElementById("p" + index + "-rut");
+      if (field && normalizeRut(field.value) === key) {
+        return document.getElementById("p" + index + "-name").value.trim();
+      }
+    }
+    return "";
+  }
+
+  function rutFieldId(rut) {
+    if (!rut) return "";
+    const key = normalizeRut(rut);
+    for (let index = 1; index <= 4; index += 1) {
+      const field = document.getElementById("p" + index + "-rut");
+      if (field && normalizeRut(field.value) === key) return "p" + index + "rut";
+    }
+    return "";
   }
 
   function showSuccess(data, payload) {

@@ -50,13 +50,8 @@ function doPost(e) {
       var duplicatedTeam = occupying.some(function (row) { return fold(row[2]) === teamKey; });
       if (duplicatedTeam) return json({ ok: false, error: "equipo" });
 
-      var duplicatedRut = occupying.some(function (row) {
-        return [row[4], row[6], row[8], row[10]].some(function (rut) {
-          var key = normalizeRut(rut);
-          return key && rutKeys.indexOf(key) !== -1;
-        });
-      });
-      if (duplicatedRut) return json({ ok: false, error: "duplicado" });
+      var conflict = findRutConflict(occupying, rutKeys);
+      if (conflict) return json({ ok: false, error: "duplicado", rut: conflict.rut, team: conflict.team });
 
       var code = uniqueCode(rows);
       var players = checked.players.concat([null, null, null, null]).slice(0, 4);
@@ -116,7 +111,8 @@ function validatePayload(data) {
   }
 
   var keys = players.map(function (player) { return normalizeRut(player.rut); });
-  if (unique(keys).length !== keys.length) return { ok: false, error: "repetido" };
+  var repeated = keys.filter(function (key, index) { return keys.indexOf(key) !== index; })[0];
+  if (repeated) return { ok: false, error: "repetido", rut: formatRut(repeated) };
 
   var whatsapp = normalizePhone(data.whatsapp);
   if (!whatsapp) return { ok: false, error: "whatsapp" };
@@ -154,6 +150,20 @@ function listTeamsFromRows(rows) {
   return rows.filter(function (row) { return occupies(row[12]); }).map(function (row) {
     return String(row[2] || "").trim();
   }).filter(Boolean);
+}
+
+function findRutConflict(rows, rutKeys) {
+  for (var rowIndex = 0; rowIndex < rows.length; rowIndex++) {
+    var row = rows[rowIndex];
+    var ruts = [row[4], row[6], row[8], row[10]];
+    for (var rutIndex = 0; rutIndex < ruts.length; rutIndex++) {
+      var key = normalizeRut(ruts[rutIndex]);
+      if (key && rutKeys.indexOf(key) !== -1) {
+        return { rut: formatRut(ruts[rutIndex]), team: String(row[2] || "").trim() };
+      }
+    }
+  }
+  return null;
 }
 
 function occupies(status) {
