@@ -2,6 +2,7 @@ window.TORNEO = {
   scriptUrl: "https://script.google.com/macros/s/AKfycbwSAYliVCsHOdgwAkClOsB6jBkZAxLeE0CZ31XFuXXWsF0YcQTNV0sebLJQSG9O2G94/exec",
   maxTeams: 16,
   amountLabel: "$5.000",
+  amountWords: "5 mil pesos por equipo",
   instagram: "red_knights_basketball",
   instagramDm: "https://ig.me/m/red_knights_basketball",
   instagramProfile: "https://www.instagram.com/red_knights_basketball/",

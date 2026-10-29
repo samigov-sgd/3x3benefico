@@ -1,6 +1,6 @@
 # Torneo 3x3 benéfico por la Teletón
 
-Página para reservar un cupo del torneo del **6 de noviembre de 2026**, a las **13:00**, en el Complejo Educacional Manuel Plaza Reyes. Hay **16 equipos**. La inscripción es de **$5.000** por equipo y todo lo recaudado se dona a la Teletón.
+Página para reservar un cupo del torneo del **6 de noviembre de 2026**, a las **13:00**, en el Complejo Educacional Manuel Plaza Reyes. Hay **16 equipos**. La inscripción es de **5 mil pesos por equipo** ($5.000) y todo lo recaudado se dona a la Teletón.
 
 Al enviar el formulario el cupo queda **reservado** y ya no lo puede tomar otro equipo. Se confirma cuando el organizador ve el comprobante en Instagram y cambia el estado a **pagado**.
 
@@ -9,7 +9,7 @@ Los RUT no se publican en la página. Solo quedan en la Google Sheet de los orga
 ## Lo que hace un equipo
 
 1. Completa el formulario con un nombre respetuoso, 3 jugadores (el cuarto puede quedar pendiente) y el WhatsApp del capitán. Puede jugar cualquier persona, de cualquier edad y sexo. Si un RUT ya está en otro equipo, la página lo indica y no deja reservar.
-2. Transfiere **$5.000** a esta cuenta:
+2. Transfiere **5 mil pesos por equipo** ($5.000) a esta cuenta:
    - Banco: Mercado Pago
    - Tipo: Cuenta vista
    - Número: 1077881431

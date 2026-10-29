@@ -289,7 +289,7 @@
     success.hidden = false;
     document.getElementById("success-title").textContent = "Tu cupo quedó reservado";
     document.getElementById("success-lead").textContent =
-      "Transfiere " + config.amountLabel + " con el código " + config.payment.reference + " para confirmarlo. El cupo sigue reservado a nombre de tu equipo hasta que los organizadores vean el comprobante.";
+      "Transfiere " + config.amountWords + " (" + config.amountLabel + ") con el código " + config.payment.reference + " para confirmarlo. El cupo sigue reservado a nombre de tu equipo hasta que los organizadores vean el comprobante.";
     document.getElementById("team-code").textContent = data.code || "";
     document.getElementById("success-team").textContent = data.teamName || payload.teamName;
     const missingFourth = payload.players.length < 4;
@@ -298,7 +298,7 @@
       : "En el mensaje de Instagram adjunta el comprobante y el código de tu equipo.";
     lastMessage = [
       "Hola, reservamos el equipo " + (data.teamName || payload.teamName) + " (código " + (data.code || "") + ").",
-      "Adjuntamos el comprobante de " + config.amountLabel + ".",
+      "Adjuntamos el comprobante de " + config.amountWords + " (" + config.amountLabel + ").",
       "Referencia " + config.payment.reference + ".",
       missingFourth ? "El cuarto jugador lo enviamos después." : ""
     ].filter(Boolean).join(" ");
