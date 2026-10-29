@@ -1,7 +1,7 @@
 window.TORNEO = {
   scriptUrl: "",
   maxTeams: 16,
-  amountLabel: "$13.000",
+  amountLabel: "$5.000",
   instagram: "red_knights_basketball",
   instagramDm: "https://ig.me/m/red_knights_basketball",
   instagramProfile: "https://www.instagram.com/red_knights_basketball/",
