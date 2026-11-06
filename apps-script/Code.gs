@@ -14,12 +14,15 @@ var TEAM_RE = /^[A-Za-zÁÉÍÓÚÜÑáéíóúüñ0-9]+(?:[ '\-][A-Za-zÁÉÍÓ
 function doGet() {
   try {
     var teams = listTeams();
+    var results = {};
+    try { results = readResults(); } catch (ignore) {}
     return json({
       ok: true,
       taken: teams.length,
       max: MAX_TEAMS,
       open: teams.length < MAX_TEAMS,
-      teams: teams
+      teams: teams,
+      results: results
     });
   } catch (error) {
     return json({ ok: false, error: "invalido" });
@@ -32,6 +35,7 @@ function doPost(e) {
       return json({ ok: false, error: "invalido" });
     }
     var data = JSON.parse(e.postData.contents);
+    if (data && data.action === "resultado") return saveResultado(data);
     if (data.website) return json({ ok: false, error: "invalido" });
 
     var checked = validatePayload(data);
@@ -292,6 +296,127 @@ function isOffensive(value) {
     if (BLOCKED_TOKENS.indexOf(keys[index]) !== -1) return true;
   }
   return BLOCKED_PHRASES.some(function (phrase) { return squeezed.indexOf(phrase) !== -1; });
+}
+
+var RESULT_NEEDS = {
+  p1: [], p2: [], p3: [], q4: [],
+  q1: ["p1"], q2: ["p2"], q3: ["p3"],
+  s1: ["q1", "q2"], s2: ["q3", "q4"],
+  f: ["s1", "s2"]
+};
+
+var RESULT_AFTER = {
+  p1: ["q1", "s1", "f"],
+  p2: ["q2", "s1", "f"],
+  p3: ["q3", "s2", "f"],
+  q1: ["s1", "f"],
+  q2: ["s1", "f"],
+  q3: ["s2", "f"],
+  q4: ["s2", "f"],
+  s1: ["f"],
+  s2: ["f"],
+  f: []
+};
+
+function saveResultado(data) {
+  var expected = PropertiesService.getScriptProperties().getProperty("CLAVE_RESULTADOS") || "teleton3x3";
+  if (String(data.clave || "") !== expected) return json({ ok: false, error: "clave" });
+
+  var id = String(data.game || "");
+  if (!Object.prototype.hasOwnProperty.call(RESULT_NEEDS, id)) return json({ ok: false, error: "partido" });
+
+  var scoreA = asScore(data.scoreA);
+  var scoreB = asScore(data.scoreB);
+  if (scoreA === null || scoreB === null || scoreA === scoreB) return json({ ok: false, error: "marcador" });
+
+  var lock = LockService.getScriptLock();
+  if (!lock.tryLock(10000)) return json({ ok: false, error: "ocupado" });
+  try {
+    var current = readResults();
+    var needs = RESULT_NEEDS[id];
+    for (var index = 0; index < needs.length; index++) {
+      if (!current[needs[index]]) return json({ ok: false, error: "partido" });
+    }
+    var previous = current[id];
+    var previousSide = previous ? (previous.a > previous.b ? "a" : "b") : "";
+    var nextSide = scoreA > scoreB ? "a" : "b";
+    writeResult(id, scoreA, scoreB);
+    if (previousSide && previousSide !== nextSide) clearResults(RESULT_AFTER[id]);
+    return json({ ok: true, results: readResults() });
+  } finally {
+    lock.releaseLock();
+  }
+}
+
+function asScore(value) {
+  if (value === "" || value === null || typeof value === "undefined") return null;
+  if (typeof value === "string" && !/^\d+$/.test(value)) return null;
+  var number = Number(value);
+  if (!isFinite(number) || Math.floor(number) !== number || number < 0 || number > 50) return null;
+  return number;
+}
+
+function readResults() {
+  var sheet = getResultsSheet();
+  var values = sheet.getDataRange().getValues();
+  var stored = {};
+  for (var index = 1; index < values.length; index++) {
+    var id = String(values[index][0] || "");
+    if (!Object.prototype.hasOwnProperty.call(RESULT_NEEDS, id)) continue;
+    var scoreA = asScore(values[index][1]);
+    var scoreB = asScore(values[index][2]);
+    if (scoreA === null || scoreB === null || scoreA === scoreB) continue;
+    stored[id] = { a: scoreA, b: scoreB };
+  }
+  return pruneResults(stored);
+}
+
+function pruneResults(stored) {
+  var order = ["p1", "p2", "p3", "q1", "q2", "q3", "q4", "s1", "s2", "f"];
+  var clean = {};
+  order.forEach(function (id) {
+    if (!stored[id]) return;
+    var ready = RESULT_NEEDS[id].every(function (need) { return clean[need]; });
+    if (ready) clean[id] = stored[id];
+  });
+  return clean;
+}
+
+function getResultsSheet() {
+  var ss = SpreadsheetApp.getActive();
+  var sheet = ss.getSheetByName("Resultados");
+  if (!sheet) sheet = ss.insertSheet("Resultados");
+  if (String(sheet.getRange(1, 1).getValue() || "") !== "Partido") {
+    sheet.getRange(1, 1, 1, 4).setValues([["Partido", "Puntos A", "Puntos B", "Actualizado"]]).setFontWeight("bold");
+    sheet.setFrozenRows(1);
+  }
+  return sheet;
+}
+
+function writeResult(id, scoreA, scoreB) {
+  var sheet = getResultsSheet();
+  var values = sheet.getDataRange().getValues();
+  var row = 0;
+  for (var index = 1; index < values.length; index++) {
+    if (String(values[index][0] || "") === id) row = index + 1;
+  }
+  var now = Utilities.formatDate(new Date(), "America/Santiago", "dd-MM-yyyy HH:mm");
+  if (!row) {
+    sheet.appendRow([id, scoreA, scoreB, now]);
+    return;
+  }
+  sheet.getRange(row, 2, 1, 3).setValues([[scoreA, scoreB, now]]);
+}
+
+function clearResults(ids) {
+  if (!ids || !ids.length) return;
+  var sheet = getResultsSheet();
+  var values = sheet.getDataRange().getValues();
+  for (var index = 1; index < values.length; index++) {
+    if (ids.indexOf(String(values[index][0] || "")) !== -1) {
+      sheet.getRange(index + 1, 2, 1, 2).clearContent();
+    }
+  }
 }
 
 function unique(items) {

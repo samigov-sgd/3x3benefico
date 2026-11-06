@@ -8,6 +8,7 @@
   const TEAM_RE = /^[A-Za-zÁÉÍÓÚÜÑáéíóúüñ0-9]+(?:[ '\-][A-Za-zÁÉÍÓÚÜÑáéíóúüñ0-9]+)*$/;
 
   document.querySelector(".ig-link").href = config.instagramProfile;
+  startLive();
   if (config.inscriptionsOpen === false) return;
   document.getElementById("ig-button").href = config.instagramDm;
 
@@ -459,5 +460,245 @@
       if (tokens.indexOf(candidate) !== -1) return true;
     }
     return phrases.some((phrase) => squeezed.indexOf(phrase) !== -1);
+  }
+
+  function startLive() {
+    const engine = window.TORNEO_BRACKET;
+    const lookup = document.getElementById("team-lookup");
+    const schedule = document.getElementById("schedule");
+    const callout = document.getElementById("team-callout");
+    const liveNote = document.getElementById("live-note");
+    const resultForm = document.getElementById("result-form");
+    const resultGame = document.getElementById("result-game");
+    const scoreA = document.getElementById("score-a");
+    const scoreB = document.getElementById("score-b");
+    const labelA = document.getElementById("score-label-a");
+    const labelB = document.getElementById("score-label-b");
+    const status = document.getElementById("result-status");
+    if (!engine || !schedule) return;
+
+    let games = engine.build({});
+    let stamp = "";
+    let sawResults = false;
+
+    render();
+    refresh();
+    window.setInterval(refresh, 20000);
+    document.addEventListener("visibilitychange", () => {
+      if (document.visibilityState === "visible") refresh();
+    });
+    document.addEventListener("torneo:results", (event) => {
+      games = engine.build(event.detail || {});
+      sawResults = true;
+      render();
+      if (liveNote) liveNote.textContent = "Resultados actualizados.";
+    });
+    if (lookup) lookup.addEventListener("input", paintSchedule);
+    if (resultGame) resultGame.addEventListener("change", syncScoreLabels);
+    if (resultForm) resultForm.addEventListener("submit", saveResult);
+
+    function render() {
+      paintBoard();
+      paintSchedule();
+      paintResultChoices();
+    }
+
+    async function refresh() {
+      if (!config.scriptUrl) return;
+      try {
+        const response = await fetch(config.scriptUrl + "?t=" + Date.now(), { cache: "no-store" });
+        const data = await response.json();
+        const results = data && data.results ? data.results : {};
+        const nextStamp = JSON.stringify(results);
+        const changed = stamp !== "" && stamp !== nextStamp;
+        stamp = nextStamp;
+        games = engine.build(results);
+        if (Object.keys(results).length) sawResults = true;
+        render();
+        if (!liveNote) return;
+        if (changed) liveNote.textContent = "Resultados actualizados.";
+        else if (!sawResults) liveNote.textContent = "Todavía no hay resultados. Este es el programa.";
+        else liveNote.textContent = "El cuadro se actualiza solo.";
+      } catch (error) {
+        if (liveNote && !sawResults) liveNote.textContent = "No pudimos actualizar los resultados. El programa sigue visible.";
+      }
+    }
+
+    function paintBoard() {
+      games.forEach((game) => {
+        const slot = document.querySelector('.slot[data-game="' + game.id + '"]');
+        if (!slot) return;
+        paintSide(slot.querySelector('[data-side="a"]'), game.a, game.aReady, game.winner);
+        paintSide(slot.querySelector('[data-side="b"]'), game.b, game.bReady, game.winner);
+        const score = slot.querySelector("[data-score]");
+        if (!score) return;
+        if (game.score) {
+          score.hidden = false;
+          score.textContent = game.score.a + "–" + game.score.b;
+        } else {
+          score.hidden = true;
+          score.textContent = "";
+        }
+      });
+    }
+
+    function paintSide(node, name, ready, winner) {
+      if (!node) return;
+      node.textContent = name;
+      node.classList.toggle("is-winner", Boolean(winner) && ready && winner === name);
+      node.classList.toggle("is-loser", Boolean(winner) && ready && winner !== name);
+    }
+
+    function paintSchedule() {
+      const hits = engine.findTeams(games, lookup ? lookup.value : "");
+      const visible = hits.length
+        ? games.filter((game) => hits.indexOf(game.a) !== -1 || hits.indexOf(game.b) !== -1)
+        : games;
+      schedule.replaceChildren();
+      if (!visible.length) {
+        const empty = document.createElement("li");
+        empty.className = "match-note";
+        empty.textContent = "No aparece ese equipo.";
+        schedule.appendChild(empty);
+      }
+      visible.forEach((game) => {
+        const item = document.createElement("li");
+        item.className = "match" + (game.score ? " played" : "");
+        const time = document.createElement("p");
+        time.className = "match-time";
+        time.textContent = game.time;
+        const body = document.createElement("div");
+        const round = document.createElement("p");
+        round.className = "match-round";
+        round.textContent = game.label;
+        const teams = document.createElement("p");
+        teams.className = "match-teams";
+        teams.textContent = game.score
+          ? game.a + " " + game.score.a + " – " + game.score.b + " " + game.b
+          : game.a + " vs " + game.b;
+        body.append(round, teams);
+        if (game.winner) {
+          const note = document.createElement("p");
+          note.className = "match-note";
+          note.textContent = "Pasa " + game.winner;
+          body.append(note);
+        }
+        item.append(time, body);
+        schedule.appendChild(item);
+      });
+
+      if (!callout) return;
+      if (hits.length === 1) {
+        callout.hidden = false;
+        callout.textContent = nextLine(hits[0]);
+      } else if (hits.length > 1) {
+        callout.hidden = false;
+        callout.textContent = "Hay más de un equipo con ese texto. Afina la búsqueda.";
+      } else {
+        callout.hidden = true;
+        callout.textContent = "";
+      }
+    }
+
+    function nextLine(name) {
+      const path = games.filter((game) => (game.aReady && game.a === name) || (game.bReady && game.b === name));
+      const finalWin = path.find((game) => game.id === "f" && game.winner === name);
+      if (finalWin) return name + " es el campeón.";
+      const lost = path.find((game) => game.winner && game.winner !== name);
+      if (lost && lost.id === "f") return name + " perdió la final.";
+      if (lost) return name + " quedó fuera en " + lost.label.toLowerCase() + ".";
+      const next = path.find((game) => !game.score);
+      if (!next) return name + " sigue en el cuadro.";
+      const rival = next.a === name ? next.b : next.a;
+      return "A " + name + " le toca a las " + next.time + ", " + next.label + ", contra " + rival + ".";
+    }
+
+    function paintResultChoices() {
+      if (!resultGame) return;
+      const previous = resultGame.value;
+      resultGame.replaceChildren();
+      games.filter((game) => game.ready).forEach((game) => {
+        const option = document.createElement("option");
+        option.value = game.id;
+        const mark = game.score ? " (" + game.score.a + "-" + game.score.b + ")" : "";
+        option.textContent = game.time + " · " + game.label + " · " + game.a + " vs " + game.b + mark;
+        resultGame.appendChild(option);
+      });
+      if ([...resultGame.options].some((option) => option.value === previous)) resultGame.value = previous;
+      syncScoreLabels();
+    }
+
+    function syncScoreLabels() {
+      if (!resultGame || !labelA || !labelB) return;
+      const game = games.find((item) => item.id === resultGame.value);
+      if (!game) return;
+      labelA.textContent = "Puntos de " + game.a;
+      labelB.textContent = "Puntos de " + game.b;
+    }
+
+    async function saveResult(event) {
+      event.preventDefault();
+      const game = games.find((item) => item.id === resultGame.value);
+      const a = parseScore(scoreA.value);
+      const b = parseScore(scoreB.value);
+      const clave = document.getElementById("result-clave").value;
+      const button = document.getElementById("result-save");
+      if (!game || !game.ready) return setStatus("Ese partido todavía no tiene a los dos equipos.", false);
+      if (a === null || b === null) return setStatus("Escribe los dos marcadores con números enteros.", false);
+      if (a === b) return setStatus("No puede quedar empatado. Si se acaba empatado el tiempo, se juega el alargue.", false);
+      if (!config.scriptUrl) return setStatus("Falta conectar la planilla.", false);
+
+      button.disabled = true;
+      setStatus("Guardando…", true);
+      try {
+        const response = await fetch(config.scriptUrl, {
+          method: "POST",
+          redirect: "follow",
+          cache: "no-store",
+          headers: { "Content-Type": "text/plain;charset=utf-8" },
+          body: JSON.stringify({ action: "resultado", game: game.id, scoreA: a, scoreB: b, clave: clave })
+        });
+        const data = await response.json();
+        if (!data.ok) {
+          setStatus(resultError(data.error), false);
+          return;
+        }
+        const results = data.results || {};
+        games = engine.build(results);
+        stamp = JSON.stringify(results);
+        sawResults = true;
+        render();
+        scoreA.value = "";
+        scoreB.value = "";
+        if (liveNote) liveNote.textContent = "Resultados actualizados.";
+        setStatus("Resultado guardado. El cuadro ya quedó actualizado.", true);
+      } catch (error) {
+        setStatus("No se pudo guardar. Revisa la conexión.", false);
+      } finally {
+        button.disabled = false;
+      }
+    }
+
+    function parseScore(value) {
+      if (!/^\d+$/.test(String(value || "").trim())) return null;
+      const number = Number(value);
+      if (!Number.isInteger(number) || number > 50) return null;
+      return number;
+    }
+
+    function setStatus(message, ok) {
+      if (!status) return;
+      status.textContent = message;
+      status.classList.toggle("good", Boolean(ok));
+      status.classList.toggle("bad", !ok);
+    }
+
+    function resultError(code) {
+      if (code === "clave") return "La clave no coincide.";
+      if (code === "marcador") return "El marcador no sirve. Tienen que ser dos números distintos.";
+      if (code === "partido") return "Ese partido todavía no se puede cargar. Falta el ganador de antes.";
+      if (code === "ocupado") return "Alguien más está guardando. Intenta otra vez.";
+      return "No se guardó. En la planilla hay que publicar una implementación nueva de la aplicación web.";
+    }
   }
 })();

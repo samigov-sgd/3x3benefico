@@ -34,6 +34,11 @@
       <p class="lede">Inscripciones cerradas. Nos vemos hoy desde las <strong>13:30</strong> en el Complejo Educacional Manuel Plaza Reyes.</p>
       <p class="open-note">A beneficio de la Teletón. Puede jugar cualquier persona, de cualquier edad y sexo.</p>
       <p class="donation">Todo lo recaudado será donado a la Teletón.</p>
+      <nav class="jumps" aria-label="Secciones">
+        <a href="#horario">Horario</a>
+        <a href="#cruces">Cruces</a>
+        <a href="#reglas">Reglas</a>
+      </nav>
     </section>
 
     <section class="facts" aria-label="Datos del torneo">
@@ -77,10 +82,22 @@
       </ol>
     </section>
 
-    <section class="bracket-wrap" aria-label="Cruces del torneo">
+    <section class="horario" id="horario">
+      <p class="cupos-kicker">Programa</p>
+      <h2>Horario</h2>
+      <p class="hint">Parte a las 13:45 y cada partido suma 15 minutos. Cuando la mesa carga un resultado, aquí aparece quién pasa y a qué hora le toca.</p>
+      <label class="lookup">Tu equipo
+        <input id="team-lookup" type="search" placeholder="Escribe el nombre del equipo" autocomplete="off" enterkeyhint="search">
+      </label>
+      <p class="callout" id="team-callout" hidden></p>
+      <p class="live-note" id="live-note">Todavía no hay resultados. Este es el programa.</p>
+      <ul class="match-list" id="schedule"></ul>
+    </section>
+
+    <section class="bracket-wrap" id="cruces" aria-label="Cruces del torneo">
       <p class="cupos-kicker">Cuadro</p>
       <h2>Cruces</h2>
-      <p class="hint">Cinco equipos quedan automáticamente en cuartos. La fase preliminar empieza a las 13:45 y cada partido suma 15 minutos.</p>
+      <p class="hint">Cinco equipos quedan automáticamente en cuartos. Los nombres se completan cuando hay resultado.</p>
       <div class="board">
         <div class="pair final-pair">
           <div class="entries">
@@ -89,32 +106,32 @@
                 <div class="pair">
                   <div class="entries">
                     <div class="slot bye"><span class="tag">A cuartos</span>papoi</div>
-                    <div class="slot game"><span class="tag">Preliminar 1</span><span class="when">13:45</span><span>los mascapitos</span><span>abelsitos</span></div>
+                    <div class="slot game" data-game="p1"><span class="tag">Preliminar 1</span><span class="when">13:45</span><span data-side="a">los mascapitos</span><span data-side="b">abelsitos</span><span class="score" data-score hidden></span></div>
                   </div>
                   <div class="elbow" aria-hidden="true"></div>
-                  <div class="slot next"><span class="tag">Cuarto 1</span><span class="when">14:30</span>papoi<span class="vs">Ganador preliminar</span></div>
+                  <div class="slot next" data-game="q1"><span class="tag">Cuarto 1</span><span class="when">14:30</span><span data-side="a">papoi</span><span class="vs" data-side="b">Ganador preliminar</span><span class="score" data-score hidden></span></div>
                 </div>
                 <div class="pair">
                   <div class="entries">
                     <div class="slot bye"><span class="tag">A cuartos</span>RealG4life</div>
-                    <div class="slot game"><span class="tag">Preliminar 2</span><span class="when">14:00</span><span>True wings</span><span>Los proyectados</span></div>
+                    <div class="slot game" data-game="p2"><span class="tag">Preliminar 2</span><span class="when">14:00</span><span data-side="a">True wings</span><span data-side="b">Los proyectados</span><span class="score" data-score hidden></span></div>
                   </div>
                   <div class="elbow" aria-hidden="true"></div>
-                  <div class="slot next"><span class="tag">Cuarto 2</span><span class="when">14:45</span>RealG4life<span class="vs">Ganador preliminar</span></div>
+                  <div class="slot next" data-game="q2"><span class="tag">Cuarto 2</span><span class="when">14:45</span><span data-side="a">RealG4life</span><span class="vs" data-side="b">Ganador preliminar</span><span class="score" data-score hidden></span></div>
                 </div>
               </div>
               <div class="elbow" aria-hidden="true"></div>
-              <div class="slot next"><span class="tag">Semi 1</span><span class="when">15:30</span>Ganador cuarto 1<span class="vs">Ganador cuarto 2</span></div>
+              <div class="slot next" data-game="s1"><span class="tag">Semi 1</span><span class="when">15:30</span><span data-side="a">Ganador cuarto 1</span><span class="vs" data-side="b">Ganador cuarto 2</span><span class="score" data-score hidden></span></div>
             </div>
             <div class="pair">
               <div class="entries">
                 <div class="pair">
                   <div class="entries">
                     <div class="slot bye"><span class="tag">A cuartos</span>Mamba Legacy</div>
-                    <div class="slot game"><span class="tag">Preliminar 3</span><span class="when">14:15</span><span>Los cuatro ñemasticos</span><span>los alfa</span></div>
+                    <div class="slot game" data-game="p3"><span class="tag">Preliminar 3</span><span class="when">14:15</span><span data-side="a">Los cuatro ñemasticos</span><span data-side="b">los alfa</span><span class="score" data-score hidden></span></div>
                   </div>
                   <div class="elbow" aria-hidden="true"></div>
-                  <div class="slot next"><span class="tag">Cuarto 3</span><span class="when">15:00</span>Mamba Legacy<span class="vs">Ganador preliminar</span></div>
+                  <div class="slot next" data-game="q3"><span class="tag">Cuarto 3</span><span class="when">15:00</span><span data-side="a">Mamba Legacy</span><span class="vs" data-side="b">Ganador preliminar</span><span class="score" data-score hidden></span></div>
                 </div>
                 <div class="pair">
                   <div class="entries">
@@ -122,19 +139,92 @@
                     <div class="slot bye"><span class="tag">A cuartos</span>kerry capo</div>
                   </div>
                   <div class="elbow" aria-hidden="true"></div>
-                  <div class="slot next"><span class="tag">Cuarto 4</span><span class="when">15:15</span>bassquad<span class="vs">kerry capo</span></div>
+                  <div class="slot next" data-game="q4"><span class="tag">Cuarto 4</span><span class="when">15:15</span><span data-side="a">bassquad</span><span class="vs" data-side="b">kerry capo</span><span class="score" data-score hidden></span></div>
                 </div>
               </div>
               <div class="elbow" aria-hidden="true"></div>
-              <div class="slot next"><span class="tag">Semi 2</span><span class="when">15:45</span>Ganador cuarto 3<span class="vs">Ganador cuarto 4</span></div>
+              <div class="slot next" data-game="s2"><span class="tag">Semi 2</span><span class="when">15:45</span><span data-side="a">Ganador cuarto 3</span><span class="vs" data-side="b">Ganador cuarto 4</span><span class="score" data-score hidden></span></div>
             </div>
           </div>
           <div class="elbow" aria-hidden="true"></div>
           <div class="finals">
-            <div class="slot champion"><span class="tag">Final</span><span class="when">16:00</span>Ganador semi 1<span class="vs">Ganador semi 2</span></div>
+            <div class="slot champion" data-game="f"><span class="tag">Final</span><span class="when">16:00</span><span data-side="a">Ganador semi 1</span><span class="vs" data-side="b">Ganador semi 2</span><span class="score" data-score hidden></span></div>
           </div>
         </div>
       </div>
+    </section>
+
+    <section class="rules" id="reglas">
+      <p class="cupos-kicker">Antes de jugar</p>
+      <h2>Reglas</h2>
+      <article class="spirit">
+        <h3>Es por un bien mayor</h3>
+        <p>Hay competencia, y también hay un bien mayor. Este torneo es por la Teletón: se juega en serio, se ayuda y se cuida el colegio. El lugar tiene que quedar como lo encontraron. Respeten al rival y a quien arbitra.</p>
+        <p><strong>El balón no se ensucia.</strong> No se juega en la tierra, no se patea y no se deja tirado. Si se sale de la cancha, se limpia antes de seguir.</p>
+      </article>
+      <div class="rule-grid">
+        <article>
+          <h3>Si vienes del 5x5</h3>
+          <ul>
+            <li>Se juega en media cancha, a un solo aro.</li>
+            <li>Entran 3. El equipo puede llevar 1 suplente: 4 en total.</li>
+            <li>Dentro del arco vale <strong>1 punto</strong>. Detrás del arco vale <strong>2</strong>. No existe el triple.</li>
+            <li>El tiro libre vale <strong>1 punto</strong>.</li>
+            <li>No hay saque de fondo como en el 5x5.</li>
+          </ul>
+        </article>
+        <article>
+          <h3>Cuánto dura y quién gana</h3>
+          <ul>
+            <li>El partido dura <strong>10 minutos</strong>. El reloj se detiene con el balón muerto.</li>
+            <li>Si un equipo llega a <strong>21 puntos</strong> antes de que se acabe el tiempo, gana en ese momento.</li>
+            <li>Si se acaba el tiempo, gana el que va arriba.</li>
+            <li>Si empatan, hay <strong>1 minuto</strong> de descanso y un alargue. Gana el primero que anota <strong>2 puntos</strong>.</li>
+            <li>Llegar a 21 solo cierra el partido en el tiempo regular, no en el alargue.</li>
+            <li>Hay <strong>12 segundos</strong> para tirar. Si recuperas tu rebote ofensivo, vuelven a correr 12.</li>
+            <li>Hay que estar en la cancha con 3 jugadores a la hora del partido.</li>
+          </ul>
+        </article>
+        <article>
+          <h3>Cómo se saca</h3>
+          <ul>
+            <li>Al inicio se sortea. Quien gana elige sacar ahora o sacar si hay alargue.</li>
+            <li>Con el balón muerto, un defensor le entrega el balón al atacante detrás del arco. Eso es el check, y ahí parten los 12 segundos.</li>
+            <li>Después de una canasta, el equipo que la recibió toma el balón debajo del aro, sin check, y tiene que llevarlo detrás del arco antes de tirar.</li>
+            <li>En esa salida, la defensa no puede pelear el balón dentro del semicírculo debajo del aro.</li>
+          </ul>
+        </article>
+        <article>
+          <h3>Cambios y minuto</h3>
+          <ul>
+            <li>Se puede cambiar con el balón muerto, antes del check o de los tiros libres.</li>
+            <li>El que entra espera detrás de la línea de fondo y toca la mano del que sale.</li>
+            <li>Cada equipo tiene <strong>1 minuto</strong> en el partido.</li>
+            <li>El minuto dura <strong>30 segundos</strong>.</li>
+            <li>Lo pide un jugador o el suplente cuando el balón está muerto, antes del check o de un tiro libre.</li>
+          </ul>
+        </article>
+        <article>
+          <h3>Faltas y expulsión</h3>
+          <ul>
+            <li>No sales por acumular faltas personales. En el 3x3 no hay límite de 5 como en el 5x5.</li>
+            <li>Te expulsan con la <strong>segunda falta antideportiva</strong>, o con una <strong>falta descalificante</strong>. Hay que dejar la cancha.</li>
+            <li>Dos faltas técnicas no expulsan por sí solas.</li>
+            <li>La falta ofensiva no da tiros libres: el balón cambia de equipo.</li>
+          </ul>
+        </article>
+        <article>
+          <h3>Cuándo hay tiro libre</h3>
+          <ul>
+            <li>En las faltas <strong>7, 8 y 9</strong> del equipo hay siempre <strong>2 tiros libres</strong>.</li>
+            <li>Desde la falta <strong>10</strong> del equipo hay <strong>2 tiros libres y el balón</strong>.</li>
+            <li>Falta en tiro, antes de esa penalidad: si la pelota entra, vale y hay 1 tiro extra. Si no entra y era de 1, hay 1 tiro. Si no entra y era de 2, hay 2 tiros.</li>
+            <li>La primera falta antideportiva son 2 tiros libres, sin posesión. La segunda son 2 tiros, la posesión y la expulsión.</li>
+            <li>La falta técnica es siempre 1 tiro libre. Después saca el equipo que tenía derecho al balón.</li>
+          </ul>
+        </article>
+      </div>
+      <p class="hint rule-source">Reglas generales de FIBA 3x3, para quien viene del 5x5. En la cancha manda la mesa.</p>
     </section>
 
     <section class="cupos" id="cupos" aria-live="polite" hidden>
@@ -285,6 +375,29 @@
       <h2>Equipos con cupo reservado</h2>
       <ul id="teams"></ul>
     </section>
+
+    <details class="mesa" id="mesa">
+      <summary>Mesa de control</summary>
+      <p class="hint">Solo la organización. Al guardar el marcador, el cuadro y el horario se actualizan para todos.</p>
+      <form class="result-form" id="result-form">
+        <label class="field">Partido
+          <select id="result-game" name="game" required></select>
+        </label>
+        <div class="scores">
+          <label class="field"><span id="score-label-a">Puntos</span>
+            <input id="score-a" name="scoreA" inputmode="numeric" autocomplete="off" required>
+          </label>
+          <label class="field"><span id="score-label-b">Puntos</span>
+            <input id="score-b" name="scoreB" inputmode="numeric" autocomplete="off" required>
+          </label>
+        </div>
+        <label class="field">Clave
+          <input id="result-clave" name="clave" type="password" autocomplete="off" required>
+        </label>
+        <button class="submit" id="result-save" type="submit">Guardar resultado</button>
+        <p class="result-status" id="result-status" role="status"></p>
+      </form>
+    </details>
   </main>
 
   <footer>
@@ -293,6 +406,7 @@
   </footer>
 
   <script src="config.js"></script>
+  <script src="bracket.js"></script>
   <script src="app.js"></script>
 </body>
 </html>
