@@ -152,6 +152,38 @@
           </div>
         </div>
       </div>
+      <div class="phases">
+        <p class="phase-hint">Desliza a la derecha para ver la fase siguiente.</p>
+        <div class="phase-nav">
+          <p class="phase-now" id="phase-now">Preliminar</p>
+          <div class="phase-dots" role="tablist" aria-label="Fases">
+            <button class="phase-dot is-on" type="button" aria-label="Preliminar"></button>
+            <button class="phase-dot" type="button" aria-label="Cuartos"></button>
+            <button class="phase-dot" type="button" aria-label="Semifinal"></button>
+            <button class="phase-dot" type="button" aria-label="Final"></button>
+          </div>
+        </div>
+        <div class="phase-track" id="phase-track" tabindex="0" aria-label="Fases del cuadro">
+          <section class="phase" aria-label="Preliminar">
+            <div class="slot game" data-game="p1"><span class="tag">Preliminar 1</span><span class="when">13:45</span><span data-side="a">los mascapitos</span><span data-side="b">abelsitos</span><span class="score" data-score hidden></span></div>
+            <div class="slot game" data-game="p2"><span class="tag">Preliminar 2</span><span class="when">14:00</span><span data-side="a">True wings</span><span data-side="b">Los proyectados</span><span class="score" data-score hidden></span></div>
+            <div class="slot game" data-game="p3"><span class="tag">Preliminar 3</span><span class="when">14:15</span><span data-side="a">Los cuatro ñemasticos</span><span data-side="b">los alfa</span><span class="score" data-score hidden></span></div>
+          </section>
+          <section class="phase" aria-label="Cuartos">
+            <div class="slot next" data-game="q1"><span class="tag">Cuarto 1</span><span class="when">14:30</span><span data-side="a">papoi</span><span class="vs" data-side="b">Ganador preliminar</span><span class="score" data-score hidden></span></div>
+            <div class="slot next" data-game="q2"><span class="tag">Cuarto 2</span><span class="when">14:45</span><span data-side="a">RealG4life</span><span class="vs" data-side="b">Ganador preliminar</span><span class="score" data-score hidden></span></div>
+            <div class="slot next" data-game="q3"><span class="tag">Cuarto 3</span><span class="when">15:00</span><span data-side="a">Mamba Legacy</span><span class="vs" data-side="b">Ganador preliminar</span><span class="score" data-score hidden></span></div>
+            <div class="slot next" data-game="q4"><span class="tag">Cuarto 4</span><span class="when">15:15</span><span data-side="a">bassquad</span><span class="vs" data-side="b">kerry capo</span><span class="score" data-score hidden></span></div>
+          </section>
+          <section class="phase" aria-label="Semifinal">
+            <div class="slot next" data-game="s1"><span class="tag">Semi 1</span><span class="when">15:30</span><span data-side="a">Ganador cuarto 1</span><span class="vs" data-side="b">Ganador cuarto 2</span><span class="score" data-score hidden></span></div>
+            <div class="slot next" data-game="s2"><span class="tag">Semi 2</span><span class="when">15:45</span><span data-side="a">Ganador cuarto 3</span><span class="vs" data-side="b">Ganador cuarto 4</span><span class="score" data-score hidden></span></div>
+          </section>
+          <section class="phase" aria-label="Final">
+            <div class="slot champion" data-game="f"><span class="tag">Final</span><span class="when">16:00</span><span data-side="a">Ganador semi 1</span><span class="vs" data-side="b">Ganador semi 2</span><span class="score" data-score hidden></span></div>
+          </section>
+        </div>
+      </div>
     </section>
 
     <section class="rules" id="reglas">

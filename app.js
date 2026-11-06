@@ -482,6 +482,7 @@
     let sawResults = false;
 
     render();
+    startPhases();
     refresh();
     window.setInterval(refresh, 20000);
     document.addEventListener("visibilitychange", () => {
@@ -524,21 +525,48 @@
       }
     }
 
+    function startPhases() {
+      const track = document.getElementById("phase-track");
+      const label = document.getElementById("phase-now");
+      const dots = [...document.querySelectorAll(".phase-dot")];
+      const names = ["Preliminar", "Cuartos", "Semifinal", "Final"];
+      if (!track || !dots.length) return;
+
+      const update = () => {
+        const width = track.clientWidth || 1;
+        const index = Math.min(names.length - 1, Math.max(0, Math.round(track.scrollLeft / width)));
+        dots.forEach((dot, dotIndex) => {
+          const on = dotIndex === index;
+          dot.classList.toggle("is-on", on);
+          dot.setAttribute("aria-current", on ? "true" : "false");
+        });
+        if (label) label.textContent = names[index];
+      };
+
+      track.addEventListener("scroll", update, { passive: true });
+      dots.forEach((dot, index) => {
+        dot.addEventListener("click", () => {
+          track.scrollTo({ left: track.clientWidth * index, behavior: "smooth" });
+        });
+      });
+      update();
+    }
+
     function paintBoard() {
       games.forEach((game) => {
-        const slot = document.querySelector('.slot[data-game="' + game.id + '"]');
-        if (!slot) return;
-        paintSide(slot.querySelector('[data-side="a"]'), game.a, game.aReady, game.winner);
-        paintSide(slot.querySelector('[data-side="b"]'), game.b, game.bReady, game.winner);
-        const score = slot.querySelector("[data-score]");
-        if (!score) return;
-        if (game.score) {
-          score.hidden = false;
-          score.textContent = game.score.a + "–" + game.score.b;
-        } else {
-          score.hidden = true;
-          score.textContent = "";
-        }
+        document.querySelectorAll('.slot[data-game="' + game.id + '"]').forEach((slot) => {
+          paintSide(slot.querySelector('[data-side="a"]'), game.a, game.aReady, game.winner);
+          paintSide(slot.querySelector('[data-side="b"]'), game.b, game.bReady, game.winner);
+          const score = slot.querySelector("[data-score]");
+          if (!score) return;
+          if (game.score) {
+            score.hidden = false;
+            score.textContent = game.score.a + "–" + game.score.b;
+          } else {
+            score.hidden = true;
+            score.textContent = "";
+          }
+        });
       });
     }
 
