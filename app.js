@@ -8,6 +8,7 @@
   const TEAM_RE = /^[A-Za-zÁÉÍÓÚÜÑáéíóúüñ0-9]+(?:[ '\-][A-Za-zÁÉÍÓÚÜÑáéíóúüñ0-9]+)*$/;
 
   document.querySelector(".ig-link").href = config.instagramProfile;
+  if (config.inscriptionsOpen === false) return;
   document.getElementById("ig-button").href = config.instagramDm;
 
   document.querySelectorAll('input[name$="rut"]').forEach((input) => {

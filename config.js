@@ -3,6 +3,7 @@ window.TORNEO = {
   maxTeams: 16,
   amountLabel: "$5.000",
   amountWords: "5 mil pesos por equipo",
+  inscriptionsOpen: false,
   instagram: "red_knights_basketball",
   instagramDm: "https://ig.me/m/red_knights_basketball",
   instagramProfile: "https://www.instagram.com/red_knights_basketball/",
@@ -10,7 +11,7 @@ window.TORNEO = {
     edition: "Segunda edición",
     title: "Torneo 3x3",
     dateLabel: "Viernes 6 de noviembre de 2026",
-    timeLabel: "Desde las 13:00 horas",
+    timeLabel: "Desde las 13:30 horas",
     place: "Complejo Educacional Manuel Plaza Reyes",
     maps: "https://www.google.com/maps/search/?api=1&query=Complejo+Educacional+Manuel+Plaza+Reyes"
   },
