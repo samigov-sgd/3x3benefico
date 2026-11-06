@@ -565,8 +565,17 @@ footer p { margin: 0.2rem 0; }
   font-weight: 700;
 }
 
-.slot.game span:not(.tag) {
+.slot.game span:not(.tag):not(.when) {
   display: block;
+}
+
+.slot .when {
+  display: block;
+  margin-bottom: 0.2rem;
+  color: var(--muted);
+  font-size: 0.92rem;
+  font-weight: 700;
+  letter-spacing: 0.04em;
 }
 
 .slot.bye { border-color: rgba(225, 6, 0, 0.7); }
@@ -588,7 +597,7 @@ footer p { margin: 0.2rem 0; }
   text-transform: uppercase;
 }
 
-.slot.game span:not(.tag) + span:not(.tag),
+.slot.game span:not(.tag):not(.when) + span:not(.tag):not(.when),
 .slot .vs {
   margin-top: 0.28rem;
   padding-top: 0.28rem;
